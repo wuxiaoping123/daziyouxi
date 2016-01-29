@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>打字游戏</title>
+    <link rel="stylesheet" href="css/game.css">
+    <script src="js/jQuery.js"></script>
+    <script src="js/animate.js"></script>
+    <script src="js/game.js"></script>
+</head>
+<body>
+    <div class="mask"></div>
+    <div class="step">
+        <span>LEVLES</span><span></span>
+    </div>
+    <div class="start"><img src="start.jpg" alt=""></div>
+    <div class="fenshu">Score:</div>
+    <div class="score">
+
+        <span>0</span>
+    </div>
+    <div class="shengh">LIFE:</div>
+    <div class="life"><span>15</span></div>
+    <div class="ra"></div>
+    <div class="next">
+
+    </div>
+    <div class="over">
+
+    </div>
+<select name="" id="">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+</select>
+<div class="footer"></div>
+</body>
+
+<script>
+    var game= new game();
+    window.onload=function(){
+
+        var ww = $(window).width()
+        var wh = $(window).height()
+        $("body,html").css({"width":ww,"height":wh,"margin": 0,"padding": 0,"overflow":" hidden","backgroundImage": "url(bg.jpg)","backgroundSize":"100% 100%"});
+
+        var s=$(".start")[0];
+        var mask=$(".mask")[0];
+        var step=$(".step")[0];
+        var life=$(".life")[0];
+        var score=$(".score")[0];
+        var ra=$(".ra")[0]
+        ra.onclick=function(){
+            alert("继续游戏")
+        }
+        var ox=ra.offsetTop;
+        var oy=ra.offsetLeft;
+        $(document).mousedown(function(e) {
+            var ev = e || event;
+            var target = ev.target;
+            var ox = ev.offsetX;
+            var oy = ev.offsetY;
+            var data = {};
+            data.ox = ox;
+            data.oy = oy;
+            $(document).on("mousemove", function(e) {
+                var ev = e || event;
+                var cx = ev.clientX;
+                var cy = ev.clientY;
+                data.cx = cx;
+                data.cy = cy;
+                ev.preventDefault();
+                $(target).trigger("drag", data)
+            })
+            $(document).mouseup(function() {
+                $(document).off("mousemove");
+            })
+
+        })
+        $(document).delegate(".ra", "drag", function(e, data) {
+            var l = data.cx - data.ox;
+            var t = data.cy - data.oy;
+            var tw = $(".ra").width();
+            var th = $(".ra").height();
+            if (l < 0) {
+                l = 0;
+            }
+            if (t < 0) {
+                t = 0;
+            }
+            if (l > ww - tw - 2) {
+                l = ww - tw - 2;
+            }
+            if (t > wh - th - 32) {
+                t = wh - th - 32;
+            }
+            $(".ra").css({
+                "z-index": 0
+            });
+            $(this).css({
+                left: l,
+                top: t,
+                "z-index": 1
+            })
+        })
+
+        s.onclick=function(){
+            this.style.display="none";
+            step.style.display="block";
+            life.style.display="block";
+            score.style.display="block";
+            animate(mask,{opacity:0,display:"none"},600)
+            // alert(1)
+
+            game.play()
+
+        }
+
+    }
+</script>
+</html>
